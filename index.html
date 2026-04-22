@@ -9,7 +9,7 @@
 body {
   margin: 0;
   font-family: Arial;
-  background: black;
+  background: #000;
   color: white;
 }
 
@@ -18,16 +18,18 @@ header {
   padding: 20px;
 }
 
+h1 {
+  margin: 0;
+}
+
 #news {
   padding: 20px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
-  gap: 20px;
 }
 
 .card {
   background: #111;
-  padding: 10px;
+  margin: 15px 0;
+  padding: 15px;
   border-radius: 10px;
 }
 
@@ -35,34 +37,31 @@ header {
   width: 100%;
   border-radius: 10px;
 }
-</style>
 
+a {
+  color: cyan;
+}
+</style>
 </head>
 
 <body>
 
 <header>
   <h1>Odisha Breaking News</h1>
+  <h2>Latest Odisha Updates</h2>
 </header>
 
-<h2 style="text-align:center;">Latest Odisha Updates</h2>
-
-<div id="news">Loading...</div>
+<div id="news">Loading news...</div>
 
 <script>
 const apiKey = "2e1a0bb9e3e8661701ea292d24bd11ce";
 
 async function getNews() {
-
-  let realUrl = `https://gnews.io/api/v4/top-headlines?country=in&q=odisha&max=10&token=${apiKey}`;
-  
-  // ✅ Proxy fix
-  let url = `https://api.allorigins.win/get?url=${encodeURIComponent(realUrl)}`;
+  let url = `https://gnews.io/api/v4/search?q=odisha&lang=en&max=10&token=${apiKey}`;
 
   try {
     let res = await fetch(url);
-    let proxyData = await res.json();
-    let data = JSON.parse(proxyData.contents);
+    let data = await res.json();
 
     let container = document.getElementById("news");
 
@@ -75,4 +74,18 @@ async function getNews() {
       <div class="card">
         <img src="${n.image || 'https://via.placeholder.com/300'}">
         <h3>${n.title}</h3>
-        <p>${n.description || ''}</p
+        <p>${n.description || ''}</p>
+        <a href="${n.url}" target="_blank">Read More</a>
+      </div>
+    `).join('');
+
+  } catch (error) {
+    document.getElementById("news").innerHTML = "<h2>Error loading news ❌</h2>";
+  }
+}
+
+getNews();
+</script>
+
+</body>
+</html>
