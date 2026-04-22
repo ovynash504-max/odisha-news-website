@@ -1,83 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Odisha Breaking News</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #000;
-  color: white;
-}
-
-header {
-  text-align: center;
-  padding: 20px;
-}
-
-h1 {
-  margin: 0;
-}
-
-#news {
-  padding: 20px;
-}
-
-.card {
-  background: #111;
-  margin: 15px 0;
-  padding: 15px;
-  border-radius: 10px;
-}
-
-.card img {
-  width: 100%;
-  border-radius: 10px;
-}
-
-a {
-  color: cyan;
-}
-</style>
-</head>
-
-<body>
-
-<header>
-  <h1>Odisha Breaking News</h1>
-  <h2>Latest Odisha Updates</h2>
-</header>
-
-<div id="news">Loading news...</div>
-
 <script>
-const apiKey = "2e1a0bb9e3e8661701ea292d24bd11ce";
-
 async function getNews() {
-  let url = `https://api.allorigins.win/raw?url=https://gnews.io/api/v4/search?q=odisha&lang=en&max=10&token=${apiKey}`;
+  let url = "https://api.allorigins.win/get?url=" + encodeURIComponent("https://news.google.com/rss/search?q=odisha&hl=en-IN&gl=IN&ceid=IN:en");
 
   try {
     let res = await fetch(url);
     let data = await res.json();
 
+    let parser = new DOMParser();
+    let xml = parser.parseFromString(data.contents, "text/xml");
+    let items = xml.querySelectorAll("item");
+
     let container = document.getElementById("news");
 
-    if (!data.articles || data.articles.length === 0) {
+    if (items.length === 0) {
       container.innerHTML = "<h2>No news found</h2>";
       return;
     }
 
-    container.innerHTML = data.articles.map(n => `
-      <div class="card">
-        <img src="${n.image || 'https://via.placeholder.com/300'}">
-        <h3>${n.title}</h3>
-        <p>${n.description || ''}</p>
-        <a href="${n.url}" target="_blank">Read More</a>
-      </div>
-    `).join('');
+    container.innerHTML = "";
+
+    items.forEach(item => {
+      let title = item.querySelector("title").textContent;
+      let link = item.querySelector("link").textContent;
+
+      container.innerHTML += `
+        <div class="card">
+          <h3>${title}</h3>
+          <a href="${link}" target="_blank">Read More</a>
+        </div>
+      `;
+    });
 
   } catch (error) {
     document.getElementById("news").innerHTML = "<h2>Error loading news ❌</h2>";
@@ -85,3 +37,4 @@ async function getNews() {
 }
 
 getNews();
+</script>
