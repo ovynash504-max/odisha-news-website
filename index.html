@@ -1,14 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Test</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Odisha Breaking News</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: black;
+  color: white;
+}
+
+header {
+  text-align: center;
+  padding: 20px;
+}
+
+#news {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #111;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 10px;
+}
+</style>
+
 </head>
-<body style="background:black;color:white;text-align:center;">
 
-<h1>Site Working ✅</h1>
+<body>
 
-</body>
-</html>
+<header>
+  <h1>Odisha Breaking News</h1>
+</header>
+
+<h2 style="text-align:center;">Latest Odisha Updates</h2>
+
+<div id="news">Loading...</div>
 
 <script>
 const apiKey = "2e1a0bb9e3e8661701ea292d24bd11ce";
@@ -16,8 +55,8 @@ const apiKey = "2e1a0bb9e3e8661701ea292d24bd11ce";
 async function getNews() {
 
   let realUrl = `https://gnews.io/api/v4/top-headlines?country=in&q=odisha&max=10&token=${apiKey}`;
-
-  // ✅ PROXY (CORS FIX)
+  
+  // ✅ Proxy fix
   let url = `https://api.allorigins.win/get?url=${encodeURIComponent(realUrl)}`;
 
   try {
@@ -36,18 +75,4 @@ async function getNews() {
       <div class="card">
         <img src="${n.image || 'https://via.placeholder.com/300'}">
         <h3>${n.title}</h3>
-        <p>${n.description || ''}</p>
-        <a href="${n.url}" target="_blank">Read More</a>
-      </div>
-    `).join('');
-
-  } catch (error) {
-    document.getElementById("news").innerHTML = "<h2>❌ Still error</h2>";
-    console.log(error);
-  }
-}
-
-getNews();
-</script>
-
-                       
+        <p>${n.description || ''}</p
